@@ -1,11 +1,13 @@
 org\TBCreates\TBGeneral\commands\player\tpcmds\TpaRequest.class
 org\TBCreates\TBGeneral\commands\admin\fly.class
 org\TBCreates\TBGeneral\commands\TBGeneralCommand.class
+org\TBCreates\TBGeneral\commands\message\MsgCommand.class
 org\TBCreates\TBGeneral\EMenuType.class
 org\TBCreates\TBGeneral\commands\player\tpcmds\TpaCommand.class
 org\TBCreates\TBGeneral\commands\menu\Menu.class
 org\TBCreates\TBGeneral\handlers\PlayerHandler.class
 org\TBCreates\TBGeneral\handlers\TorchHandler.class
+org\TBCreates\TBGeneral\commands\message\ReplyCommand.class
 org\TBCreates\TBGeneral\TBGeneral.class
 org\TBCreates\TBGeneral\commands\player\message\MsgCommand.class
 org\TBCreates\TBGeneral\commands\player\message\ReplyCommand.class
