@@ -1,4 +1,4 @@
-# TBGeneral - All-in-One Minecraft Plugin for Bukkit
+# TBGeneral - All-in-One Minecraft Plugin 
 
 TBGeneral is a powerful, multi-purpose plugin for Minecraft servers running on Bukkit. With TBGeneral, you'll have all the essential utilities and features you need in one plugin, making it the perfect choice for server administrators looking to streamline their server management.
 
