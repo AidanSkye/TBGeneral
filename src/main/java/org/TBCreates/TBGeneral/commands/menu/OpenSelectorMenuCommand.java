@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
 
-    private final String invName = "Selector Menu";
+    private final String invName = ChatColor.WHITE + "҉㍿";
     private final HashMap<UUID, Inventory> customInventories = new HashMap<>();
 
     private final Menu menu; // Reference to the Menu class (Admin Menu)
@@ -32,7 +33,6 @@ public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.menu = adminMenu; // Store reference to the Menu (Admin Menu) class
     }
-
     // Handle the command to open the menu
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -78,9 +78,9 @@ public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
             case 52:
             case 51:
             case 50:
+                player.chat("/menu");
                 break;
 
-            // Blue Glass - Open Trophies Menu
             case 1:
             case 2:
             case 3:
@@ -90,7 +90,6 @@ public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
             case 19:
             case 20:
             case 21:
-                player.chat("/trophiesmenu");
                 break;
 
             default:
@@ -106,25 +105,25 @@ public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
         // Green Glass (Right section)
         int[] greenGlassSlots = {5, 6, 7, 14, 15, 16, 23, 24, 25};
         for (int slot : greenGlassSlots) {
-            inv.setItem(slot, getGlassPaneItem(Material.GREEN_STAINED_GLASS_PANE, "&4COMING SOON", "&aCome back later"));
+            inv.setItem(slot, getGlassPaneItem(Material.AIR, "&4COMING SOON", "&aCome back later"));
         }
 
         // Blue Glass (Center-left section)
         int[] blueGlassSlots = {1, 2, 3, 10, 11, 12, 19, 20, 21};
         for (int slot : blueGlassSlots) {
-            inv.setItem(slot, getGlassPaneItem(Material.BLUE_STAINED_GLASS_PANE, "&4COMING SOON", "&aCome back later"));
+            inv.setItem(slot, getGlassPaneItem(Material.AIR, "&4COMING SOON", "&aCome back later"));
         }
 
         // Pink Glass (Bottom-right section)
         int[] pinkGlassSlots = {34, 33, 32, 41, 42, 43, 52, 51, 50};
         for (int slot : pinkGlassSlots) {
-            inv.setItem(slot, getGlassPaneItem(Material.PINK_STAINED_GLASS_PANE, "&dGamemode Select", "&aClick to open Admin menu"));
+            inv.setItem(slot, getGlassPaneItem(Material.AIR, "&dGamemode Select", "&aClick to open Admin menu"));
         }
 
         // Gray Glass (Bottom-left section)
         int[] grayGlassSlots = {28, 29, 30, 37, 38, 39, 46, 47, 48};
         for (int slot : grayGlassSlots) {
-            inv.setItem(slot, getGlassPaneItem(Material.GRAY_STAINED_GLASS_PANE, "&4COMING SOON", "&aCome back later"));
+            inv.setItem(slot, getGlassPaneItem(Material.AIR, "&4COMING SOON", "&aCome back later"));
         }
 
         // Store the inventory for validation

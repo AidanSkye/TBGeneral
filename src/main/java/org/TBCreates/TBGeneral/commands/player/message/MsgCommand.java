@@ -37,7 +37,7 @@ public class MsgCommand implements CommandExecutor {
 
         Player targetPlayer = Bukkit.getPlayerExact(args[0]);
         if (targetPlayer == null || !targetPlayer.isOnline()) {
-            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "Player not found or offline.");
+            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "Player not found or is offline.");
             return true;
         }
 
