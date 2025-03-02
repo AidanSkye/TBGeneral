@@ -4,7 +4,7 @@ Permission is hereby granted, free of charge, to download, use, and configure th
 
 1. **No Redistribution**: The Plugin may not be redistributed, sold, or made available for download from any other source than the official GitHub repository at https://github.com/Thebestharrison1221/TBGeneral.
 
-2. **No Modification of Plugin Code**: Users are not permitted to modify, reverse-engineer, or alter the Plugin's source code in any way. The only allowed modification is through the configuration file (`config.yml`), which can be adjusted to suit individual preferences.
+2. **No Modification of Plugin Code**: Users are not permitted to modify, reverse-engineer, or alter the Plugin's source code in any way. The only allowed modification is through the configuration file (`config.yml`), which can be adjusted to suit individual preferences. You may however create pull requests with additions/updates on features.
 
 3. **Credit Requirement**: If the Plugin is used in any content (such as videos, streams, or written work) or on a Minecraft server, appropriate credit must be given to "Thebestharrison1221" as the creator of the Plugin. This credit must be clearly visible and easily accessible, such as in the content description, server MOTD, or credits section.
 
