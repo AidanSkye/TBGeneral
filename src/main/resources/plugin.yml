@@ -45,8 +45,8 @@ commands:
     aliases: tbg
   tbgcommands:
     description: Useful commands for players
-    usage: /tbgc <sub-command>
-    aliases: tbgc
+    usage: /tbg <sub-command>
+    aliases: tbg
     permission: tbgeneral.admin
   heal:
     description: used to heal players
@@ -69,19 +69,30 @@ commands:
     usage: /vanish
     permission: tbgeneral.admin
   msg:
-    description: msg.
-    usage: /msg
-    aliases: message
+    description: Custom private message command
+    usage: /msg <player> <message>
+    aliases: [tell, whisper]
+    permission: tbgeneral.msg
   reply:
-    description: msg.
-    usage: /r
-    aliases: reply
+    description: Reply to the last private message
+    usage: /reply <message>
+    aliases: [r]
+    permission: tbgeneral.use
+  commandspy:
+    description: Toggle CommandSpy to see all player commands.
+    permission: tbgeneral.admin
   tpa:
-    description: Request to teleport to another player.
+    description: Request to teleport to a player
     usage: /tpa <player>
+    permission: tbgeneral.tpa
   tpaccept:
-    description: Accept a teleport request.
+    description: Accept a teleport request
     usage: /tpaccept
+    permission: tbgeneral.tpaccept
+  tpdeny:
+    description: Deny a teleport request
+    usage: /tpdeny
+    permission: tbgeneral.tpdeny
 permissions:
   tbgeneral.admin:
     description: Admin for tbgeneral plugin.

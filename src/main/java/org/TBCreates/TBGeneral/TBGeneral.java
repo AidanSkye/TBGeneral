@@ -1,20 +1,14 @@
 package org.TBCreates.TBGeneral;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.TBCreates.TBGeneral.Listeners.tabcompleter.TBGeneralTabCompleter;
+import org.TBCreates.TBGeneral.Listeners.CommandSpyListener;
 import org.TBCreates.TBGeneral.commands.*;
-import org.TBCreates.TBGeneral.commands.admin.ForceGiveBookCommand;
-import org.TBCreates.TBGeneral.commands.admin.GameModeCommand;
-import org.TBCreates.TBGeneral.commands.admin.fly;
+import org.TBCreates.TBGeneral.commands.admin.*;
 import org.TBCreates.TBGeneral.commands.menu.Menu;
 import org.TBCreates.TBGeneral.commands.menu.OpenSelectorMenuCommand;
 import org.TBCreates.TBGeneral.commands.player.message.MsgCommand;
 import org.TBCreates.TBGeneral.commands.player.message.ReplyCommand;
-import org.TBCreates.TBGeneral.commands.admin.AdminVanishCommand;
-import org.TBCreates.TBGeneral.commands.player.tpcmds.AcceptCommand;
-import org.TBCreates.TBGeneral.commands.player.tpcmds.TpaCommand;
-import org.TBCreates.TBGeneral.commands.player.tpcmds.TpaManager;
+import org.TBCreates.TBGeneral.commands.player.teleport.TpaCommand;
+import org.TBCreates.TBGeneral.commands.player.teleport.TpacceptCommand;
 import org.TBCreates.TBGeneral.handlers.PlayerHandler;
 import org.TBCreates.TBGeneral.handlers.TorchHandler;
 import org.bukkit.Bukkit;
@@ -39,21 +33,16 @@ public final class TBGeneral extends JavaPlugin implements Listener {
     // Declare the instance variable for the prefix
     private String prefix;
 
+    private final HashSet<UUID> commandSpyEnabled = new HashSet<>();
+
     // HashMap to store teleport requests
     private final HashMap<UUID, UUID> teleportRequests = new HashMap<>();
 
     // Set to track vanished players
     private final Set<UUID> vanishedPlayers = new HashSet<>();
 
-    private TpaManager tpaManager;
-
     public static Plugin getInstance() {
         return null;
-    }
-
-    @Override
-    public void onLoad() {
-        this.tpaManager = new TpaManager();
     }
 
     @Override
@@ -158,9 +147,8 @@ public final class TBGeneral extends JavaPlugin implements Listener {
         OpenSelectorMenuCommand openSelectorMenuCommand = new OpenSelectorMenuCommand(this, adminMenu);
         getCommand("openselectormenu").setExecutor(openSelectorMenuCommand);
 
-        TpaManager tpaManager = new TpaManager();
-        getCommand("tpa").setExecutor(new TpaCommand(tpaManager));
-        getCommand("tpaccept").setExecutor(new AcceptCommand(tpaManager));
+        getServer().getPluginManager().registerEvents(new CommandSpyListener(commandSpyEnabled), this);
+        getCommand("commandspy").setExecutor(new CommandSpyCommand(commandSpyEnabled));
 
         getCommand("gmc").setExecutor(new GameModeCommand(this));
         getCommand("gms").setExecutor(new GameModeCommand(this));
@@ -172,6 +160,8 @@ public final class TBGeneral extends JavaPlugin implements Listener {
 
         this.getCommand("msg").setExecutor(new MsgCommand(this));
         this.getCommand("reply").setExecutor(new ReplyCommand(this));
+        getCommand("tpa").setExecutor(new TpaCommand());
+        getCommand("tpaccept").setExecutor(new TpacceptCommand(this));
 
         boolean allowTpToSelf = getConfig().getBoolean("settings.allow-tp-to-self", false);
         getLogger().info("Allow teleport to self: " + allowTpToSelf);

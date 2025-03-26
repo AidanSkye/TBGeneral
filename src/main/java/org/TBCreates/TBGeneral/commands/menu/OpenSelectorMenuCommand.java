@@ -23,7 +23,7 @@ import java.util.UUID;
 
 public class OpenSelectorMenuCommand implements Listener, CommandExecutor {
 
-    private final String invName = ChatColor.WHITE + "҉㍿";
+    private final String invName = ChatColor.WHITE + "Game mode Selector";
     private final HashMap<UUID, Inventory> customInventories = new HashMap<>();
 
     private final Menu menu; // Reference to the Menu class (Admin Menu)

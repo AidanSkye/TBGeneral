@@ -25,27 +25,35 @@ public class ReplyCommand implements CommandExecutor {
 
         Player senderPlayer = (Player) sender;
 
-        if (args.length < 1) {
-            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "Usage: /reply <message>");
+        if (!MsgCommand.lastMessaged.containsKey(senderPlayer)) {
+            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "No one has messaged you recently.");
             return true;
         }
 
         Player targetPlayer = MsgCommand.lastMessaged.get(senderPlayer);
         if (targetPlayer == null || !targetPlayer.isOnline()) {
-            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "No one to reply to or the player is offline.");
+            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "The player you last messaged has gone offline.");
+            return true;
+        }
+
+        if (args.length < 1) {
+            senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "Usage: /reply <message>");
             return true;
         }
 
         String message = String.join(" ", args);
 
         // Send the messages with the prefix
-        targetPlayer.sendMessage(getPrefix() + ChatColor.GOLD + "[From " + senderPlayer.getName() + "]: " + ChatColor.WHITE + message);
-        senderPlayer.sendMessage(getPrefix() + ChatColor.GOLD + "[To " + targetPlayer.getName() + "]: " + ChatColor.WHITE + message);
+        String formattedMessage = ChatColor.GRAY + "✉ " + ChatColor.GOLD + "From " + ChatColor.YELLOW + senderPlayer.getName() + ChatColor.GOLD + " ➤ " + ChatColor.WHITE + message;
+        String formattedReply = ChatColor.GRAY + "✉ " + ChatColor.GOLD + "To " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.GOLD + " ➤ " + ChatColor.WHITE + message;
+
+        targetPlayer.sendMessage(formattedMessage);
+        senderPlayer.sendMessage(formattedReply);
 
         // Play a ding sound for the receiver
         playDing(targetPlayer);
 
-        // Update the last messaged map to keep the conversation flowing
+        // Update the last messaged map
         MsgCommand.lastMessaged.put(senderPlayer, targetPlayer);
         MsgCommand.lastMessaged.put(targetPlayer, senderPlayer);
 

@@ -39,8 +39,8 @@ public class ReplyCommand implements CommandExecutor {
         String message = String.join(" ", args);
 
         // Send the messages with the prefix
-        targetPlayer.sendMessage(getPrefix() + ChatColor.GOLD + "[From " + senderPlayer.getName() + "]: " + ChatColor.WHITE + message);
-        senderPlayer.sendMessage(getPrefix() + ChatColor.GOLD + "[To " + targetPlayer.getName() + "]: " + ChatColor.WHITE + message);
+        targetPlayer.sendMessage(ChatColor.GOLD + "[From " + senderPlayer.getName() + "]: " + ChatColor.WHITE + message);
+        senderPlayer.sendMessage( ChatColor.GOLD + "[To " + targetPlayer.getName() + "]: " + ChatColor.WHITE + message);
 
         // Play a ding sound for the receiver
         playDing(targetPlayer);
