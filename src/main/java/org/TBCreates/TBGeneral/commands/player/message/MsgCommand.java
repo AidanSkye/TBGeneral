@@ -74,6 +74,6 @@ public class MsgCommand implements CommandExecutor {
     }
 
     private String getPrefix() {
-        return ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix", "&6[MyPlugin] &r"));
+        return ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix", "&6[DefaultPrefix] &r"));
     }
 }

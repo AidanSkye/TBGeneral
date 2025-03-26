@@ -1,5 +1,6 @@
 package org.TBCreates.TBGeneral.commands.admin;
 
+import org.TBCreates.TBGeneral.TBGeneral;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,8 +13,13 @@ import java.util.Set;
 public class MessageSpyCommand implements CommandExecutor {
 
     public static final Set<Player> spyingAdmins = new HashSet<>();
+    private final TBGeneral plugin;
 
-    @Override
+    // Constructor that takes TBGeneral plugin as an argument
+    public MessageSpyCommand(TBGeneral plugin) {
+        this.plugin = plugin;
+    }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
@@ -30,9 +36,11 @@ public class MessageSpyCommand implements CommandExecutor {
         if (spyingAdmins.contains(player)) {
             spyingAdmins.remove(player);
             player.sendMessage(ChatColor.YELLOW + "MessageSpy has been " + ChatColor.RED + "disabled.");
+            System.out.println(player.getName() + " has disabled MessageSpy.");
         } else {
             spyingAdmins.add(player);
             player.sendMessage(ChatColor.YELLOW + "MessageSpy has been " + ChatColor.GREEN + "enabled.");
+            System.out.println(player.getName() + " has enabled MessageSpy.");
         }
 
         return true;

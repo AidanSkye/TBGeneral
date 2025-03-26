@@ -9,6 +9,7 @@ import org.TBCreates.TBGeneral.commands.player.message.MsgCommand;
 import org.TBCreates.TBGeneral.commands.player.message.ReplyCommand;
 import org.TBCreates.TBGeneral.commands.player.teleport.TpaCommand;
 import org.TBCreates.TBGeneral.commands.player.teleport.TpacceptCommand;
+import org.TBCreates.TBGeneral.commands.player.teleport.TpdenyCommand;
 import org.TBCreates.TBGeneral.handlers.PlayerHandler;
 import org.TBCreates.TBGeneral.handlers.TorchHandler;
 import org.bukkit.Bukkit;
@@ -21,7 +22,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,17 +33,11 @@ public final class TBGeneral extends JavaPlugin implements Listener {
     // Declare the instance variable for the prefix
     private String prefix;
 
-    private final HashSet<UUID> commandSpyEnabled = new HashSet<>();
-
-    // HashMap to store teleport requests
+    // HashMap to store teleport requests and vanished players
     private final HashMap<UUID, UUID> teleportRequests = new HashMap<>();
-
-    // Set to track vanished players
     private final Set<UUID> vanishedPlayers = new HashSet<>();
 
-    public static Plugin getInstance() {
-        return null;
-    }
+    private final HashSet<UUID> commandSpyEnabled = new HashSet<>(); // For command spy
 
     @Override
     public void onEnable() {
@@ -88,15 +82,12 @@ public final class TBGeneral extends JavaPlugin implements Listener {
 
     // Load the prefix from the config and apply color codes
     public void loadPrefix() {
-        // Load the prefix from the config (with a default value if it's not set)
         this.prefix = getConfig().getString("prefix", "&7[TBGeneral] ");
-        // Apply color codes to the prefix
         this.prefix = ChatColor.translateAlternateColorCodes('&', prefix);
     }
 
     // New Method: Update Texture Pack URL in server.properties
     private void updateTexturePackInServerProperties() {
-        // Get the texture pack URL from the config
         String texturePackUrl = getConfig().getString("texture-pack-url");
 
         if (texturePackUrl == null || texturePackUrl.isEmpty()) {
@@ -104,7 +95,6 @@ public final class TBGeneral extends JavaPlugin implements Listener {
             return;
         }
 
-        // Load the server.properties file
         File serverPropertiesFile = new File("server.properties");
         if (!serverPropertiesFile.exists()) {
             getLogger().severe("server.properties file not found! Cannot set the texture pack URL.");
@@ -112,22 +102,18 @@ public final class TBGeneral extends JavaPlugin implements Listener {
         }
 
         try {
-            // Load properties from the file
             Properties properties = new Properties();
             try (FileInputStream inputStream = new FileInputStream(serverPropertiesFile)) {
                 properties.load(inputStream);
             }
 
-            // Update the texture pack URL
             properties.setProperty("resource-pack", texturePackUrl);
 
-            // Save the updated properties back to the file
             try (FileOutputStream outputStream = new FileOutputStream(serverPropertiesFile)) {
                 properties.store(outputStream, "Updated by TBGeneral plugin");
             }
 
             getLogger().info("Successfully updated texture pack URL in server.properties.");
-
         } catch (IOException e) {
             getLogger().severe("An error occurred while updating server.properties: " + e.getMessage());
             e.printStackTrace();
@@ -136,38 +122,40 @@ public final class TBGeneral extends JavaPlugin implements Listener {
 
     // Register commands
     private void registerCommands() {
-        getCommand("givebook").setExecutor(new ForceGiveBookCommand(this));
-        getCommand("fly").setExecutor(new fly(this));
-        getCommand("menu").setExecutor(new Menu(this)); // Make sure Menu is the correct executor
+        // Register the main /tbg command
         getCommand("tbgeneral").setExecutor(new TBGeneralCommand(this));
         getCommand("tbgeneral").setTabCompleter(new TBGeneralCommand(this));
 
-        // Additional Game Mode and Other Commands
-        Menu adminMenu = new Menu(this);
-        OpenSelectorMenuCommand openSelectorMenuCommand = new OpenSelectorMenuCommand(this, adminMenu);
-        getCommand("openselectormenu").setExecutor(openSelectorMenuCommand);
-
-        getServer().getPluginManager().registerEvents(new CommandSpyListener(commandSpyEnabled), this);
-        getCommand("commandspy").setExecutor(new CommandSpyCommand(commandSpyEnabled));
-
+        // Register other commands directly (as usual)
+        getCommand("fly").setExecutor(new fly(this));
+        getCommand("givebook").setExecutor(new ForceGiveBookCommand(this));
+        getCommand("heal").setExecutor(new GameModeCommand(this));
+        getCommand("tpa").setExecutor(new TpaCommand());
+        getCommand("msg").setExecutor(new MsgCommand(this));
+        getCommand("tbg").setExecutor(new TBGeneralCommand(this)); // This also makes /tbg work
         getCommand("gmc").setExecutor(new GameModeCommand(this));
         getCommand("gms").setExecutor(new GameModeCommand(this));
-        getCommand("gma").setExecutor(new GameModeCommand(this));
         getCommand("gmsp").setExecutor(new GameModeCommand(this));
-        getCommand("heal").setExecutor(new GameModeCommand(this)); // Register heal command
-        getCommand("bring").setExecutor(new GameModeCommand(this));
-        getCommand("goto").setExecutor(new GameModeCommand(this));
-
+        getCommand("gma").setExecutor(new GameModeCommand(this));
+        getCommand("messagespy").setExecutor(new MessageSpyCommand(this));
+        getCommand("tpaccept").setExecutor(new TpacceptCommand(this));
+        getCommand("tpdeny").setExecutor(new TpdenyCommand());
+        getCommand("menu").setExecutor(new Menu(this));
         this.getCommand("msg").setExecutor(new MsgCommand(this));
         this.getCommand("reply").setExecutor(new ReplyCommand(this));
-        getCommand("tpa").setExecutor(new TpaCommand());
-        getCommand("tpaccept").setExecutor(new TpacceptCommand(this));
 
         boolean allowTpToSelf = getConfig().getBoolean("settings.allow-tp-to-self", false);
         getLogger().info("Allow teleport to self: " + allowTpToSelf);
 
         getCommand("vanish").setExecutor(new AdminVanishCommand(this));
         getServer().getPluginManager().registerEvents(this, this);
+
+        getServer().getPluginManager().registerEvents(new CommandSpyListener(commandSpyEnabled), this);
+        getCommand("commandspy").setExecutor(new CommandSpyCommand(commandSpyEnabled));
+
+        Menu adminMenu = new Menu(this);
+        OpenSelectorMenuCommand openSelectorMenuCommand = new OpenSelectorMenuCommand(this, adminMenu);
+        getCommand("openselectormenu").setExecutor(openSelectorMenuCommand);
     }
 
     // Custom join message
@@ -176,18 +164,14 @@ public final class TBGeneral extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
 
-        // Check if the player was vanished when they left
         if (vanishedPlayers.contains(playerUUID)) {
-            // Hide the player from others and suppress the join message
             event.setJoinMessage(null);
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 onlinePlayer.hidePlayer(this, player);
             }
-            return;
+        } else {
+            event.setJoinMessage(getPrefix() + " Welcome " + player.getName() + " to the server!");
         }
-
-        // Set custom join message for non-vanished players
-        event.setJoinMessage(getPrefix() + " Welcome " + player.getName() + " to the server!");
     }
 
     // Custom leave message
@@ -196,16 +180,9 @@ public final class TBGeneral extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
 
-        // Check if the player is vanished and persist their vanished state
-        if (AdminVanishCommand.vanished.contains(player)) {
-            vanishedPlayers.add(playerUUID);
+        if (vanishedPlayers.contains(playerUUID)) {
             event.setQuitMessage(null); // Suppress leave message
         } else {
-            vanishedPlayers.remove(playerUUID); // Remove from vanished list if no longer vanished
-        }
-
-        // Set custom quit message for non-vanished players
-        if (!vanishedPlayers.contains(playerUUID)) {
             event.setQuitMessage(getPrefix() + " Goodbye " + player.getName() + "!");
         }
     }
