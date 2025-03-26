@@ -10,3 +10,12 @@ tpa:
   teleport-delay: 5  # Number of seconds before teleporting
   enable-sounds: true  # Toggle sounds on/off
   enable-particles: true  # Toggle particles on/off
+
+vanish:
+  messages:
+    vanish: "&7You have vanished."
+    unvanish: "&aYou are no longer vanished."
+  tablist:
+    prefix: "&c[V] &r" # Custom prefix for vanished admins in the tab list
+  chest:
+    silent_open: true # Makes chest interactions fully silent & invisible

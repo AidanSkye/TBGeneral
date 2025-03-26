@@ -77,6 +77,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.Sentropic</groupId>
             <artifactId>GUI-API</artifactId>
             <version>1.2.1</version>

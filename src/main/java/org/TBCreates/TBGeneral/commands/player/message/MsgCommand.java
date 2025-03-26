@@ -6,8 +6,10 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.TBCreates.TBGeneral.commands.admin.MessageSpyCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,8 @@ public class MsgCommand implements CommandExecutor {
         }
 
         Player senderPlayer = (Player) sender;
+        FileConfiguration config = plugin.getConfig();
+        String spyPrefix = ChatColor.translateAlternateColorCodes('&', config.getString("messagespy.prefix", "&c[Spy] "));
 
         if (args.length < 2) {
             senderPlayer.sendMessage(getPrefix() + ChatColor.RED + "Usage: /msg <player> <message>");
@@ -43,16 +47,24 @@ public class MsgCommand implements CommandExecutor {
 
         String message = String.join(" ", args).substring(args[0].length()).trim();
 
-        // Send the messages with the prefix
-        targetPlayer.sendMessage(ChatColor.GOLD + "[From " + senderPlayer.getName() + "]: " + ChatColor.WHITE + message);
+        // Send messages to sender & recipient
         senderPlayer.sendMessage(ChatColor.GOLD + "[To " + targetPlayer.getName() + "]: " + ChatColor.WHITE + message);
+        targetPlayer.sendMessage(ChatColor.GOLD + "[From " + senderPlayer.getName() + "]: " + ChatColor.WHITE + message);
 
-        // Play a ding sound for the receiver
+        // Play notification sound for receiver
         playDing(targetPlayer);
 
-        // Update the last messaged map
+        // Save last messaged player
         lastMessaged.put(senderPlayer, targetPlayer);
         lastMessaged.put(targetPlayer, senderPlayer);
+
+        // Notify spying admins
+        for (Player admin : MessageSpyCommand.spyingAdmins) {
+            if (admin.isOnline() && !admin.equals(senderPlayer) && !admin.equals(targetPlayer)) {
+                admin.sendMessage(spyPrefix + ChatColor.GRAY + senderPlayer.getName() + " → " +
+                        targetPlayer.getName() + ": " + ChatColor.WHITE + message);
+            }
+        }
 
         return true;
     }

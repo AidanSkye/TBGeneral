@@ -1,7 +1,7 @@
 name: TBGeneral
-version: '0.1-BETA'
+version: '0.2-BETA'
 main: org.TBCreates.TBGeneral.TBGeneral
-api-version: '1.21'
+api-version: '1.21.3'
 load: STARTUP
 authors: [thebestharrison]
 description: A plugin for all your general needs
@@ -11,13 +11,15 @@ commands:
   givebook:
     description: Force give the TBGeneral Info book to a player.
     usage: /givebook <player>
-    permission: tbgeneral.admin
+    permission: tbgeneral.givebook
     permission-message: You do not have permission to use this command.
+
   fly:
     description: Toggles flying for command sender.
     usage: /fly
     aliases: f
-    permission: tbgeneral.admin
+    permission: tbgeneral.fly
+
   gmc:
     description: Sets the player’s game mode to Creative.
     usage: /gmc
@@ -43,6 +45,7 @@ commands:
     description: Main command for TBGeneral plugin
     usage: /tbgeneral <reload>
     aliases: tbg
+    permission: tbgeneral.admin
   tbgcommands:
     description: Useful commands for players
     usage: /tbg <sub-command>
@@ -68,19 +71,26 @@ commands:
     description: vanish.
     usage: /vanish
     permission: tbgeneral.admin
+  commandspy:
+    description: Toggle CommandSpy to see all player commands.
+    permission: tbgeneral.admin
+  messagespy:
+    description: Toggles message spying for admins
+    usage: /messagespy
+    permission: tbgeneral.admin
+    aliases: [msgspy]
+
   msg:
     description: Custom private message command
     usage: /msg <player> <message>
-    aliases: [tell, whisper]
+    aliases: [tell, whisper, w]
     permission: tbgeneral.msg
   reply:
     description: Reply to the last private message
     usage: /reply <message>
     aliases: [r]
-    permission: tbgeneral.use
-  commandspy:
-    description: Toggle CommandSpy to see all player commands.
-    permission: tbgeneral.admin
+    permission: tbgeneral.reply
+
   tpa:
     description: Request to teleport to a player
     usage: /tpa <player>
@@ -93,6 +103,32 @@ commands:
     description: Deny a teleport request
     usage: /tpdeny
     permission: tbgeneral.tpdeny
+
 permissions:
   tbgeneral.admin:
     description: Admin for tbgeneral plugin.
+    default: op
+  tbgeneral.tpa:
+    description: send tpa requests for tbgeneral plugin.
+    default: op
+  tbgeneral.tpaccept:
+    description: accept tpa requests for tbgeneral plugin.
+    default: op
+  tbgeneral.reply:
+    description: reply to messages for tbgeneral plugin.
+    default: op
+  tbgeneral.msg:
+    description: send messages for tbgeneral plugin.
+    default: op
+  tbgeneral.fly:
+    description: lets you fly for tbgeneral plugin.
+    default: op
+  tbgeneral.givebook:
+    description: lets give the book for tbgeneral plugin.
+    default: op
+  tbgeneral.vanish:
+    description: Allows the use of /vanish
+    default: op
+  tbgeneral.vanish.see:
+    description: Allows admins to see vanished players in tab
+    default: op
