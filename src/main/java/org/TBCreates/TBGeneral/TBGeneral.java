@@ -1,6 +1,8 @@
 package org.TBCreates.TBGeneral;
 
 import org.TBCreates.TBGeneral.Listeners.CommandSpyListener;
+import org.TBCreates.TBGeneral.Listeners.ConfigUpdater;
+import org.TBCreates.TBGeneral.Listeners.UpdateChecker;
 import org.TBCreates.TBGeneral.commands.*;
 import org.TBCreates.TBGeneral.commands.admin.*;
 import org.TBCreates.TBGeneral.commands.menu.Menu;
@@ -36,16 +38,22 @@ public final class TBGeneral extends JavaPlugin implements Listener {
     // HashMap to store teleport requests and vanished players
     private final HashMap<UUID, UUID> teleportRequests = new HashMap<>();
     private final Set<UUID> vanishedPlayers = new HashSet<>();
-
+    private UpdateChecker updateChecker;
     private final HashSet<UUID> commandSpyEnabled = new HashSet<>(); // For command spy
 
     @Override
     public void onEnable() {
         // Save the default config if it doesn't exist
         saveDefaultConfig();
+        ConfigUpdater.updateConfig(this);
 
         // Load the prefix from the config file before using it
         loadPrefix();
+
+        updateChecker = new UpdateChecker(this);
+        updateChecker.checkForUpdates(); // Check for updates on startup
+
+        getServer().getPluginManager().registerEvents(new PlayerHandler(this, updateChecker), this);
 
         // Set texture pack URL in server.properties
         updateTexturePackInServerProperties();
@@ -60,8 +68,7 @@ public final class TBGeneral extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);  // Register the event listeners
 
         // Initialize handlers
-        new TorchHandler(this);
-        new PlayerHandler(this);
+        // new TorchHandler(this);
     }
 
     @Override
